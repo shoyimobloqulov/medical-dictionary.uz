@@ -16,6 +16,7 @@ use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TagsColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -32,9 +33,11 @@ class MedicalTermResource extends Resource
 
     public static function form(Form $form): Form
     {
+//        Comment
         return $form
             ->schema([
                 Repeater::make('translations')
+                    ->label("Переводы")
                     ->relationship()
                     ->schema([
                         Select::make('language_id')
@@ -42,6 +45,8 @@ class MedicalTermResource extends Resource
                             ->options(Language::all()->pluck('name', 'id'))
                             ->searchable()
                             ->allowHtml()
+                            ->preload()
+                            ->createOptionUsing(fn($data) => Language::create(['name' => $data['name'], 'code' => $data['code'], 'flag' => $data['flag']]))
                             ->createOptionForm([
                                 TextInput::make('name')
                                     ->label('Название')
@@ -62,6 +67,7 @@ class MedicalTermResource extends Resource
                         TextInput::make('name')
                             ->label('Медицинский термин')
                             ->required()
+                            ->columnSpanFull()
                             ->maxLength(255),
 
                         RichEditor::make('description')
@@ -91,10 +97,9 @@ class MedicalTermResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')->label('ID')->sortable(),
-                TextColumn::make('translations.name')
-                    ->label('Медицинский термин')
-                    ->getStateUsing(fn($record) => $record->translations->first()?->name ?? '-')
-                    ->sortable(),
+                TagsColumn::make('translations_list')
+                    ->label('Переводы')
+                    ->getStateUsing(fn($record) => $record->translations->pluck('name')->toArray()),
 
                 TextColumn::make('translations.language.name')
                     ->label('Язык')

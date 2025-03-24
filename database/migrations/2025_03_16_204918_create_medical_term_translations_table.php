@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('medical_term_id')->constrained()->onDelete('cascade');
             $table->foreignId('language_id')->constrained()->onDelete('cascade');
-            $table->string('name');
+            $table->text('name');
             $table->text('description');
             $table->timestamps();
         });
