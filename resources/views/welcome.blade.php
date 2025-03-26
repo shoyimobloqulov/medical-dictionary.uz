@@ -8,17 +8,18 @@
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet"/>
 
         <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
         @livewireStyles
     </head>
-    <body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
-       @livewire('dictionary')
+    <body
+        class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
+        @livewire('dictionary')
 
         @livewire('abbreviation-list')
 
-       @livewireScripts
+        @livewireScripts
     </body>
 </html>

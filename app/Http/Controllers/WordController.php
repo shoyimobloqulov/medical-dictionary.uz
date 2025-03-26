@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\FilterExport;
 use App\Models\Abbreviation;
 use App\Models\Language;
 use App\Models\MedicalTerm;
@@ -9,18 +10,47 @@ use App\Models\MedicalTermTranslation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class WordController extends Controller
 {
     public function readWord()
     {
-        $check = $this->check("hard.xlsx");
+        $check = $this->check("ysolve.xlsx");
+
+
+        $maxCount = max(count($check['A']), count($check['B']), count($check['C']));
+        for($i=0; $i<$maxCount;$i++){
+            $medical_term = MedicalTerm::create([]);
+
+            MedicalTermTranslation::create([
+                'medical_term_id' => $medical_term->id,
+                'language_id' => 1,
+                'name' => $check['A'][$i]['word'],
+                'description' => $check['A'][$i]['desc']
+            ]);
+
+            MedicalTermTranslation::create([
+                'medical_term_id' => $medical_term->id,
+                'language_id' => 2,
+                'name' => $check['C'][$i]['word'],
+                'description' => $check['C'][$i]['desc']
+            ]);
+            MedicalTermTranslation::create([
+                'medical_term_id' => $medical_term->id,
+                'language_id' => 3,
+                'name' => $check['B'][$i]['word'],
+                'description' => $check['B'][$i]['desc']
+            ]);
+
+        }
+
 
         return response()->json([
-            count($check['A']),
-            count($check['B']),
-            count($check['C'])
+            "A" => count($check['A']),
+            "B" => count($check['B']),
+            "C" => count($check['C'])
         ]);
     }
 

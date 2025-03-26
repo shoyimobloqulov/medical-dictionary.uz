@@ -7,7 +7,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-Route::get('/word', [WordController::class, 'abb']);
+//Route::get('/word', [WordController::class, 'readWord']);
 
 

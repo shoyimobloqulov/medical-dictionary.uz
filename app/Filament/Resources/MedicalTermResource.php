@@ -21,6 +21,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 use Stevebauman\Purify\Facades\Purify;
@@ -100,8 +101,10 @@ class MedicalTermResource extends Resource
                 TextColumn::make('id')->label('ID')->sortable(),
                 TagsColumn::make('translations_list')
                     ->label('Переводы')
-                    ->getStateUsing(fn($record) => $record->translations->pluck('name')->toArray()),
-
+                    ->getStateUsing(fn($record) => $record->translations
+                        ->map(fn($t) => Str::of($t->description)->explode(' ')->first())
+                        ->toArray()
+                    ),
                 TagsColumn::make('translations.language.name')
                     ->label('Язык')
                     ->getStateUsing(fn($record) => $record->translations->pluck('language.name')->filter()->toArray()),
