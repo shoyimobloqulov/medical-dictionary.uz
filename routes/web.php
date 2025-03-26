@@ -8,6 +8,6 @@ Route::get('/', function () {
 });
 
 
-Route::get('/word', [WordController::class, 'readWord']);
+Route::get('/word', [WordController::class, 'abb']);
 
 

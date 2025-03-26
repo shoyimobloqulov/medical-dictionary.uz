@@ -30,6 +30,7 @@ class MedicalTermResource extends Resource
     protected static ?string $model = MedicalTerm::class;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = 'Медицинский словарь';
+    protected static ?string $label = "Медицинские термины";
 
     public static function form(Form $form): Form
     {
@@ -101,9 +102,10 @@ class MedicalTermResource extends Resource
                     ->label('Переводы')
                     ->getStateUsing(fn($record) => $record->translations->pluck('name')->toArray()),
 
-                TextColumn::make('translations.language.name')
+                TagsColumn::make('translations.language.name')
                     ->label('Язык')
-                    ->getStateUsing(fn($record) => $record->translations->first()?->language?->name ?? '-'),
+                    ->getStateUsing(fn($record) => $record->translations->pluck('language.name')->filter()->toArray()),
+
 
                 TextColumn::make('created_at')->label('Дата создания')->dateTime(),
             ])

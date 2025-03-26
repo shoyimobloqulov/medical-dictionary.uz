@@ -38,9 +38,11 @@ class Dictionary extends Component
         $this->toLang = Language::where('code', 'en')->first()->id ?? null;
         $this->words = collect();
 
-        $this->alphabets['en'] = range('A','Z');
+        $this->alphabets['en'] = range('A', 'Z');
 
         $this->languages = Language::all();
+
+        $this->updatedFromText();
     }
 
     public function updateLanguage($language)
@@ -61,13 +63,12 @@ class Dictionary extends Component
             return;
         }
 
-        $translation = MedicalTermTranslation::whereHas('language', function ($query) {
-            $query->where('id', $this->toLang);
-        })
+        $language = Language::find($this->toLang);
+
+        $translation = MedicalTermTranslation::where('language_id',$language->id)
             ->where('name', 'LIKE', '%' . $this->fromText . '%')
             ->first();
-
-        $this->toText = $translation->name ?? 'Перевод не найден';
+        $this->toText = $translation->description ?? 'Перевод не найден';
         $this->isTranslating = false;
     }
 
@@ -75,6 +76,8 @@ class Dictionary extends Component
     {
         [$this->fromLang, $this->toLang] = [$this->toLang, $this->fromLang];
         [$this->fromText, $this->toText] = [$this->toText, $this->fromText];
+
+        $this->updatedFromText();
     }
 
     public function setLetter($letter)

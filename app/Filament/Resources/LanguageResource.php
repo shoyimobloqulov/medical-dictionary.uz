@@ -15,7 +15,8 @@ class LanguageResource extends Resource
 {
     protected static ?string $model = Language::class;
     protected static ?string $navigationIcon = 'heroicon-o-flag'; // Bayroq belgisi
-    protected static ?string $navigationGroup = 'Настройки';
+    protected static ?string $navigationGroup = 'Медицинский словарь';
+    protected static ?string $label = "Язык";
 
     public static function form(Forms\Form $form): Forms\Form
     {
@@ -45,7 +46,7 @@ class LanguageResource extends Resource
                 Tables\Columns\ImageColumn::make('flag') // Flag ustuni rasmlar uchun
                 ->label('Флаг')
                     ->circular(),
-                ])
+            ])
             ->searchable()
             ->filters([])
             ->actions([
